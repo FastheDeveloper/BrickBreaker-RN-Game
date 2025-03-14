@@ -5,12 +5,10 @@ import Game from "./src/components/Game";
 
 export default function App() {
   return (
-    <>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Game />
-        <StatusBar style="light" />
-      </GestureHandlerRootView>
-    </>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Game />
+      <StatusBar style="light" />
+    </GestureHandlerRootView>
   );
 }
 

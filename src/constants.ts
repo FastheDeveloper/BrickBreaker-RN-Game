@@ -6,5 +6,5 @@ export const ballSpeed = 100;
 export const boardHeight = 500;
 export const blocksPerRow = 7;
 export const blockW = width / blocksPerRow - 10;
-export const ballSpeedIncrement = 5; // Amount to increase speed
+export const ballSpeedIncrement = 50; // Amount to increase speed
 export const increaseSpeedInterval = 10; // Time in seconds

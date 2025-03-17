@@ -18,4 +18,5 @@ export type BlockData = Square & {
 export type BallData = Circle & {
     dx: number;
     dy: number;
+    speed: number
 };

@@ -6,21 +6,23 @@ import {
 import { useGameContext } from "@/GameContext";
 import { useWindowDimensions } from "react-native";
 import Animated, {
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedStyle,
   useFrameCallback,
   useSharedValue,
 } from "react-native-reanimated";
 
 export default function Ball() {
-  const { ball } = useGameContext();
+  const { ball, isUserTurn, onEndTurn } = useGameContext();
   const lastIncreaseTime = useSharedValue(0); // Track the last time speed was increased
   const { width } = useWindowDimensions();
 
-  useFrameCallback((frameInfo) => {
+  const frameCallback = useFrameCallback((frameInfo) => {
     const delta = (frameInfo.timeSincePreviousFrame || 0) / 1000;
     const timeSinceFirstFrame = frameInfo.timeSinceFirstFrame || 0;
     let { x, y, dx, dy, speed, r } = ball!.value;
-    console.log(speed);
+    // console.log(speed);
     // Check if 5 seconds have passed since the last speed increase
     if (
       Math.floor(timeSinceFirstFrame / 1000) >
@@ -29,7 +31,7 @@ export default function Ball() {
       speed += ballSpeedIncrement; // Increase speed
 
       lastIncreaseTime.value = Math.floor(timeSinceFirstFrame / 1000); // Update last increase time
-      console.log(speed, "fas", lastIncreaseTime.value);
+      // console.log(speed, "fas", lastIncreaseTime.value);
     }
 
     // touched top wall
@@ -41,7 +43,7 @@ export default function Ball() {
     if (y > boardHeight - r) {
       dy *= -1;
       y = boardHeight - r;
-      // onEndTurn();
+      onEndTurn();
       // return;
     }
     // touched left wall
@@ -66,7 +68,16 @@ export default function Ball() {
       dy,
       dx,
     };
-  });
+  }, false);
+
+  const startFramrCllback = (val: boolean) => {
+    frameCallback.setActive(val);
+  };
+
+  useAnimatedReaction(
+    () => isUserTurn!.value,
+    (val) => runOnJS(startFramrCllback)(!val)
+  );
   const ballStyles = useAnimatedStyle(() => {
     const { x, y, r } = ball!.value;
     return {
